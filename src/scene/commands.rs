@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy::sprite::{MaterialMesh2dBundle, Mesh2dHandle};
 
-use super::components::*;
+use crate::prelude::*;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
@@ -13,12 +13,12 @@ pub fn spawn_ball(
     mut materiels: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn((
+        Ball,
         MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Circle::new(20.0))),
             material: materiels.add(Color::WHITE),
             ..default()
         },
-        Ball,
     ));
 }
 
@@ -28,22 +28,22 @@ pub fn spawn_paddles(
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn((
+        Paddle,
         MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
             material: materials.add(Color::WHITE),
             transform: Transform::from_xyz(-500.0, 0.0, 0.0),
             ..default()
         },
-        Paddle,
     ));
 
     commands.spawn((
+        Paddle,
         MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
             material: materials.add(Color::WHITE),
             transform: Transform::from_xyz(500.0, 0.0, 0.0),
             ..default()
         },
-        Paddle,
     ));
 }

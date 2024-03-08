@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = "0.13.0" 
+bevy = "0.13"
+bevy_xpbd_2d = "0.4"
 
 [profile.dev]
 opt-level = 1
