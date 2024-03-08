@@ -7,7 +7,10 @@ pub struct ScenePlugin;
 
 impl Plugin for ScenePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (spawn_camera, spawn_ball, spawn_paddles))
-            .insert_resource(Gravity::ZERO);
+        app.add_systems(
+            Startup,
+            (spawn_camera, spawn_ball, spawn_paddles, spawn_walls),
+        )
+        .insert_resource(Gravity::ZERO);
     }
 }
