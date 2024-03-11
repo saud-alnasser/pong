@@ -3,7 +3,6 @@ use pong::prelude::*;
 
 fn main() {
     App::new()
-        .add_plugins(ScenePlugin)
-        .add_plugins(DefaultPlugins)
+        .add_plugins((DefaultPlugins, PhysicsPlugins::default(), ScenePlugin))
         .run();
 }
