@@ -16,11 +16,12 @@ pub mod components {
     pub struct Wall;
 }
 
-pub mod commands {
+pub mod systems {
     use crate::prelude::*;
 
     use bevy::prelude::*;
     use bevy::sprite::{MaterialMesh2dBundle, Mesh2dHandle};
+    use rand::Rng;
 
     #[derive(Bundle)]
     struct BallBundle {
@@ -29,6 +30,7 @@ pub mod commands {
         collider: Collider,
         restitution: Restitution,
         friction: Friction,
+        liner_velocity: LinearVelocity,
         material_mesh: MaterialMesh2dBundle<ColorMaterial>,
     }
 
@@ -40,6 +42,7 @@ pub mod commands {
                 collider: Collider::circle(20.0),
                 restitution: Restitution::new(1.0),
                 friction: Friction::new(0.0),
+                liner_velocity: LinearVelocity::ZERO,
                 material_mesh: MaterialMesh2dBundle {
                     mesh: Mesh2dHandle::default(),
                     material: Handle::default(),
@@ -182,10 +185,31 @@ pub mod commands {
             ..default()
         },));
     }
+
+    pub fn kick_off(mut ball: Query<&mut LinearVelocity, With<Ball>>) {
+        let mut ball_velocity = match ball.iter_mut().next() {
+            Some(ball) => ball,
+            None => return,
+        };
+
+        let velocity = {
+            let mut rng = rand::thread_rng();
+
+            let speed = 300.0;
+
+            let x_direction = if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
+            let y_direction = if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
+
+            Vec2::new(x_direction, y_direction) * speed
+        };
+
+        ball_velocity.x = velocity.x;
+        ball_velocity.y = velocity.y;
+    }
 }
 
 pub mod plugins {
-    use super::commands;
+    use super::systems;
 
     use bevy::prelude::*;
     use bevy_xpbd_2d::resources::Gravity;
@@ -197,11 +221,13 @@ pub mod plugins {
             app.add_systems(
                 Startup,
                 (
-                    commands::spawn_camera,
-                    commands::spawn_ball,
-                    commands::spawn_paddles,
-                    commands::spawn_walls,
-                ),
+                    systems::spawn_camera,
+                    systems::spawn_ball,
+                    systems::spawn_paddles,
+                    systems::spawn_walls,
+                    systems::kick_off,
+                )
+                    .chain(),
             )
             .insert_resource(Gravity::ZERO);
         }
