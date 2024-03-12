@@ -32,23 +32,18 @@ pub mod commands {
         material_mesh: MaterialMesh2dBundle<ColorMaterial>,
     }
 
-    impl BallBundle {
-        fn new(
-            meshes: &mut ResMut<Assets<Mesh>>,
-            materials: &mut ResMut<Assets<ColorMaterial>>,
-            position: (f32, f32, f32),
-            radius: f32,
-        ) -> Self {
+    impl Default for BallBundle {
+        fn default() -> Self {
             Self {
                 ball: Ball,
                 rigid_body: RigidBody::Dynamic,
-                collider: Collider::circle(radius),
+                collider: Collider::circle(20.0),
                 restitution: Restitution::new(1.0),
                 friction: Friction::new(0.0),
                 material_mesh: MaterialMesh2dBundle {
-                    mesh: Mesh2dHandle(meshes.add(Circle::new(radius))),
-                    material: materials.add(Color::WHITE),
-                    transform: Transform::from_xyz(position.0, position.1, position.2),
+                    mesh: Mesh2dHandle::default(),
+                    material: Handle::default(),
+                    transform: Transform::from_xyz(0.0, 0.0, 0.0),
                     ..default()
                 },
             }
@@ -65,23 +60,18 @@ pub mod commands {
         material_mesh: MaterialMesh2dBundle<ColorMaterial>,
     }
 
-    impl PaddleBundle {
-        fn new(
-            meshes: &mut ResMut<Assets<Mesh>>,
-            materials: &mut ResMut<Assets<ColorMaterial>>,
-            position: (f32, f32, f32),
-            size: (f32, f32),
-        ) -> Self {
+    impl Default for PaddleBundle {
+        fn default() -> Self {
             Self {
                 paddle: Paddle,
                 rigid_body: RigidBody::Kinematic,
-                collider: Collider::rectangle(size.0, size.1),
+                collider: Collider::rectangle(25.0, 200.0),
                 restitution: Restitution::new(1.0),
                 friction: Friction::new(0.0),
                 material_mesh: MaterialMesh2dBundle {
-                    mesh: Mesh2dHandle(meshes.add(Rectangle::new(size.0, size.1))),
-                    material: materials.add(Color::WHITE),
-                    transform: Transform::from_xyz(position.0, position.1, position.2),
+                    mesh: Mesh2dHandle::default(),
+                    material: Handle::default(),
+                    transform: Transform::from_xyz(0.0, 0.0, 0.0),
                     ..default()
                 },
             }
@@ -98,23 +88,18 @@ pub mod commands {
         material_mesh: MaterialMesh2dBundle<ColorMaterial>,
     }
 
-    impl WallBundle {
-        fn new(
-            meshes: &mut ResMut<Assets<Mesh>>,
-            materials: &mut ResMut<Assets<ColorMaterial>>,
-            position: (f32, f32, f32),
-            size: (f32, f32),
-        ) -> Self {
+    impl Default for WallBundle {
+        fn default() -> Self {
             Self {
                 wall: Wall,
                 rigid_body: RigidBody::Kinematic,
-                collider: Collider::rectangle(size.0, size.1),
+                collider: Collider::rectangle(0.0, 0.0),
                 restitution: Restitution::new(1.0),
                 friction: Friction::new(0.0),
                 material_mesh: MaterialMesh2dBundle {
-                    mesh: Mesh2dHandle(meshes.add(Rectangle::new(size.0, size.1))),
-                    material: materials.add(Color::WHITE),
-                    transform: Transform::from_xyz(position.0, position.1, position.2),
+                    mesh: Mesh2dHandle::default(),
+                    material: Handle::default(),
+                    transform: Transform::from_xyz(0.0, 0.0, 0.0),
                     ..default()
                 },
             }
@@ -130,12 +115,16 @@ pub mod commands {
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<ColorMaterial>>,
     ) {
-        commands.spawn((BallBundle::new(
-            &mut meshes,
-            &mut materials,
-            (0.0, 0.0, 0.0),
-            20.0,
-        ),));
+        commands.spawn((BallBundle {
+            material_mesh: MaterialMesh2dBundle {
+                mesh: Mesh2dHandle(meshes.add(Circle::new(20.0))),
+                material: materials.add(Color::WHITE),
+                transform: Transform::from_xyz(0.0, 0.0, 0.0),
+                ..default()
+            },
+            collider: Collider::circle(20.0),
+            ..default()
+        },));
     }
 
     pub fn spawn_paddles(
@@ -143,19 +132,27 @@ pub mod commands {
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<ColorMaterial>>,
     ) {
-        commands.spawn((PaddleBundle::new(
-            &mut meshes,
-            &mut materials,
-            (-550.0, 0.0, 0.0),
-            (25.0, 200.0),
-        ),));
+        commands.spawn((PaddleBundle {
+            material_mesh: MaterialMesh2dBundle {
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
+                material: materials.add(Color::WHITE),
+                transform: Transform::from_xyz(-550.0, 0.0, 0.0),
+                ..default()
+            },
+            collider: Collider::rectangle(25.0, 200.0),
+            ..default()
+        },));
 
-        commands.spawn((PaddleBundle::new(
-            &mut meshes,
-            &mut materials,
-            (550.0, 0.0, 0.0),
-            (25.0, 200.0),
-        ),));
+        commands.spawn((PaddleBundle {
+            material_mesh: MaterialMesh2dBundle {
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
+                material: materials.add(Color::WHITE),
+                transform: Transform::from_xyz(550.0, 0.0, 0.0),
+                ..default()
+            },
+            collider: Collider::rectangle(25.0, 200.0),
+            ..default()
+        },));
     }
 
     pub fn spawn_walls(
@@ -163,19 +160,27 @@ pub mod commands {
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<ColorMaterial>>,
     ) {
-        commands.spawn((WallBundle::new(
-            &mut meshes,
-            &mut materials,
-            (0.0, 375.0, 0.0),
-            (1280.0, 25.0),
-        ),));
+        commands.spawn((WallBundle {
+            material_mesh: MaterialMesh2dBundle {
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(1280.0, 25.0))),
+                material: materials.add(Color::WHITE),
+                transform: Transform::from_xyz(0.0, 375.0, 0.0),
+                ..default()
+            },
+            collider: Collider::rectangle(1280.0, 25.0),
+            ..default()
+        },));
 
-        commands.spawn((WallBundle::new(
-            &mut meshes,
-            &mut materials,
-            (0.0, -375.0, 0.0),
-            (1280.0, 25.0),
-        ),));
+        commands.spawn((WallBundle {
+            material_mesh: MaterialMesh2dBundle {
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(1280.0, 25.0))),
+                material: materials.add(Color::WHITE),
+                transform: Transform::from_xyz(0.0, -375.0, 0.0),
+                ..default()
+            },
+            collider: Collider::rectangle(1280.0, 25.0),
+            ..default()
+        },));
     }
 }
 
