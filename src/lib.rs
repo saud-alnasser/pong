@@ -3,13 +3,15 @@ pub mod prelude;
 pub mod scene;
 
 use bevy::app::{PluginGroup, PluginGroupBuilder};
+use physics::plugins::PhysicsPlugin;
+use scene::plugins::ScenePlugin;
 
 pub struct PongPlugins;
 
 impl PluginGroup for PongPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
-            .add(physics::plugins::PhysicsPlugin)
-            .add(scene::plugins::ScenePlugin)
+            .add(PhysicsPlugin)
+            .add(ScenePlugin)
     }
 }
