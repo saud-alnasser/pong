@@ -138,23 +138,23 @@ pub mod systems {
     ) {
         commands.spawn(PaddleBundle {
             material_mesh: MaterialMesh2dBundle {
-                mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 125.0))),
                 material: materials.add(Color::WHITE),
                 transform: Transform::from_xyz(-550.0, 0.0, 0.0),
                 ..default()
             },
-            collider: Collider::rectangle(25.0, 200.0),
+            collider: Collider::rectangle(25.0, 125.0),
             ..default()
         });
 
         commands.spawn(PaddleBundle {
             material_mesh: MaterialMesh2dBundle {
-                mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 125.0))),
                 material: materials.add(Color::WHITE),
                 transform: Transform::from_xyz(550.0, 0.0, 0.0),
                 ..default()
             },
-            collider: Collider::rectangle(25.0, 200.0),
+            collider: Collider::rectangle(25.0, 125.0),
             ..default()
         });
     }
@@ -196,7 +196,7 @@ pub mod systems {
         let velocity = {
             let mut rng = rand::thread_rng();
 
-            let speed = 300.0;
+            let speed = 500.0;
 
             let x_direction = if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
             let y_direction = if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
