@@ -1,8 +1,10 @@
+pub mod opponent;
 pub mod physics;
 pub mod prelude;
 pub mod scene;
 
 use bevy::app::{PluginGroup, PluginGroupBuilder};
+use opponent::plugins::OpponentPlugin;
 use physics::plugins::PhysicsPlugin;
 use scene::plugins::ScenePlugin;
 
@@ -13,5 +15,6 @@ impl PluginGroup for PongPlugins {
         PluginGroupBuilder::start::<Self>()
             .add(PhysicsPlugin)
             .add(ScenePlugin)
+            .add(OpponentPlugin)
     }
 }

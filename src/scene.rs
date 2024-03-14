@@ -18,7 +18,6 @@ pub mod components {
 
 pub mod systems {
     use crate::prelude::*;
-
     use bevy::prelude::*;
     use bevy::sprite::{MaterialMesh2dBundle, Mesh2dHandle};
     use rand::Rng;
@@ -60,6 +59,7 @@ pub mod systems {
         collider: Collider,
         restitution: Restitution,
         friction: Friction,
+        external_forces: ExternalForce,
         material_mesh: MaterialMesh2dBundle<ColorMaterial>,
     }
 
@@ -71,6 +71,7 @@ pub mod systems {
                 collider: Collider::rectangle(25.0, 200.0),
                 restitution: Restitution::new(1.0),
                 friction: Friction::new(0.0),
+                external_forces: ExternalForce::ZERO,
                 material_mesh: MaterialMesh2dBundle {
                     mesh: Mesh2dHandle::default(),
                     material: Handle::default(),
@@ -95,7 +96,7 @@ pub mod systems {
         fn default() -> Self {
             Self {
                 wall: Wall,
-                rigid_body: RigidBody::Kinematic,
+                rigid_body: RigidBody::Static,
                 collider: Collider::rectangle(0.0, 0.0),
                 restitution: Restitution::new(1.0),
                 friction: Friction::new(0.0),
@@ -118,7 +119,7 @@ pub mod systems {
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<ColorMaterial>>,
     ) {
-        commands.spawn((BallBundle {
+        commands.spawn(BallBundle {
             material_mesh: MaterialMesh2dBundle {
                 mesh: Mesh2dHandle(meshes.add(Circle::new(20.0))),
                 material: materials.add(Color::WHITE),
@@ -127,7 +128,7 @@ pub mod systems {
             },
             collider: Collider::circle(20.0),
             ..default()
-        },));
+        });
     }
 
     pub fn spawn_paddles(
@@ -135,7 +136,7 @@ pub mod systems {
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<ColorMaterial>>,
     ) {
-        commands.spawn((PaddleBundle {
+        commands.spawn(PaddleBundle {
             material_mesh: MaterialMesh2dBundle {
                 mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
                 material: materials.add(Color::WHITE),
@@ -144,9 +145,9 @@ pub mod systems {
             },
             collider: Collider::rectangle(25.0, 200.0),
             ..default()
-        },));
+        });
 
-        commands.spawn((PaddleBundle {
+        commands.spawn(PaddleBundle {
             material_mesh: MaterialMesh2dBundle {
                 mesh: Mesh2dHandle(meshes.add(Rectangle::new(25.0, 200.0))),
                 material: materials.add(Color::WHITE),
@@ -155,7 +156,7 @@ pub mod systems {
             },
             collider: Collider::rectangle(25.0, 200.0),
             ..default()
-        },));
+        });
     }
 
     pub fn spawn_walls(
@@ -163,7 +164,7 @@ pub mod systems {
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<ColorMaterial>>,
     ) {
-        commands.spawn((WallBundle {
+        commands.spawn(WallBundle {
             material_mesh: MaterialMesh2dBundle {
                 mesh: Mesh2dHandle(meshes.add(Rectangle::new(1280.0, 25.0))),
                 material: materials.add(Color::WHITE),
@@ -172,9 +173,9 @@ pub mod systems {
             },
             collider: Collider::rectangle(1280.0, 25.0),
             ..default()
-        },));
+        });
 
-        commands.spawn((WallBundle {
+        commands.spawn(WallBundle {
             material_mesh: MaterialMesh2dBundle {
                 mesh: Mesh2dHandle(meshes.add(Rectangle::new(1280.0, 25.0))),
                 material: materials.add(Color::WHITE),
@@ -183,7 +184,7 @@ pub mod systems {
             },
             collider: Collider::rectangle(1280.0, 25.0),
             ..default()
-        },));
+        });
     }
 
     pub fn kick_off(mut ball: Query<&mut LinearVelocity, With<Ball>>) {
@@ -210,7 +211,6 @@ pub mod systems {
 
 pub mod plugins {
     use super::systems;
-
     use bevy::prelude::*;
     use bevy_xpbd_2d::resources::Gravity;
 
