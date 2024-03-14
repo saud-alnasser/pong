@@ -44,7 +44,7 @@ pub mod systems {
             None => return,
         };
 
-        let speed = 500.0;
+        let speed = 350.0;
         let distance = match ball.translation.x < 0.0 {
             true => ball.translation.y - paddle.translation.y,
             false => 0.0 - paddle.translation.y,
@@ -54,7 +54,7 @@ pub mod systems {
         let magnitude = (speed * time.delta_seconds()).min(distance.abs());
 
         paddle.translation.y += magnitude * direction;
-        paddle.translation.y = clamp(paddle.translation.y, -250.0, 250.0);
+        paddle.translation.y = clamp(paddle.translation.y, -275.0, 275.0);
     }
 }
 
