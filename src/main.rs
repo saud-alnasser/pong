@@ -4,7 +4,15 @@ use pong::PongPlugins;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Pong".to_string(),
+                resolution: (1280.0, 720.0).into(),
+                resizable: false,
+                ..default()
+            }),
+            ..default()
+        }))
         .add_plugins(
             WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Escape)),
         )
