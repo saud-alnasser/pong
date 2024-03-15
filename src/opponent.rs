@@ -15,18 +15,6 @@ pub mod systems {
     use bevy::prelude::*;
     use bevy_xpbd_2d::parry::na::clamp;
 
-    pub fn assign_opponent(
-        mut commands: Commands,
-        paddles: Query<(Entity, &Transform), With<Paddle>>,
-    ) {
-        let (paddle, _) = paddles
-            .iter()
-            .find(|(_, transform)| transform.translation.x < 0.0)
-            .expect("failed to construct opponent paddle; no paddle found on the left side of the screen");
-
-        commands.entity(paddle).insert(Opponent);
-    }
-
     pub fn move_opponent(
         (ball, mut paddle): (
             Query<&Transform, With<Ball>>,
@@ -60,18 +48,13 @@ pub mod systems {
 
 pub mod plugins {
     use super::systems;
-    use crate::scene;
     use bevy::prelude::*;
 
     pub struct OpponentPlugin;
 
     impl Plugin for OpponentPlugin {
         fn build(&self, app: &mut App) {
-            app.add_systems(
-                Startup,
-                systems::assign_opponent.after(scene::systems::spawn_paddles),
-            )
-            .add_systems(FixedUpdate, systems::move_opponent);
+            app.add_systems(FixedUpdate, systems::move_opponent);
         }
     }
 }
