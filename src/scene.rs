@@ -187,6 +187,29 @@ pub mod systems {
         });
     }
 
+    pub fn assign_opponent(
+        mut commands: Commands,
+        paddles: Query<(Entity, &Transform), With<Paddle>>,
+    ) {
+        let (paddle, _) = paddles
+            .iter()
+            .find(|(_, transform)| transform.translation.x < 0.0)
+            .expect("failed to construct opponent paddle; no paddle found on the left side of the screen");
+
+        commands.entity(paddle).insert(Opponent);
+    }
+
+    pub fn assign_player(
+        mut commands: Commands,
+        paddles: Query<(Entity, &Transform), (With<Paddle>, Without<Opponent>)>,
+    ) {
+        let(paddle, _) = paddles .iter()
+            .find(|(_, transform)| transform.translation.x > 0.0)
+            .expect("failed to construct player paddle; no paddle found on the right side of the screen");
+
+        commands.entity(paddle).insert(Player);
+    }
+
     pub fn kick_off(mut ball: Query<&mut LinearVelocity, With<Ball>>) {
         let mut ball_velocity = match ball.iter_mut().next() {
             Some(ball) => ball,
@@ -225,6 +248,8 @@ pub mod plugins {
                     systems::spawn_ball,
                     systems::spawn_paddles,
                     systems::spawn_walls,
+                    systems::assign_opponent,
+                    systems::assign_player,
                     systems::kick_off,
                 )
                     .chain(),
