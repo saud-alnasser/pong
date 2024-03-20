@@ -1,0 +1,24 @@
+# types
+
+"📚 type: documentation":
+  - any: ["**/*.md"]
+  - any: ["**/*.mdx"]
+
+"🔧 type: tools":
+  - any: ["*.config.*"]
+  - any: [".*rc.*"]
+  - any: [".*rc"]
+  - any: [".*ignore"]
+  - any: [".*attributes"]
+  - any: ["knope.toml"]
+  - any:
+      [
+        ".github/**/*",
+        "!.github/ISSUE_TEMPLATE/*",
+        "!.github/pull_request_template.md",
+      ]
+
+# flags
+
+"📦 flag: dependencies":
+  - any: ["Cargo.lock"]

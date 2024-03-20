@@ -1,0 +1,42 @@
+name: "🔧 integration"
+
+on:
+  pull_request:
+    types: ["opened", "reopened", "synchronize", "edited"]
+
+jobs:
+  integration:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - stable
+
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "📝 lint pull request title"
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "🔼 update rust"
+        run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+
+      - name: "💿 cache cargo"
+        uses: Swatinem/rust-cache@v2
+
+      - name: "⚙️ install system dependencies"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libudev-dev
+
+      - name: "🧪 test crates"
+        run: cargo test --verbose
+
+      - name: "📦 build crates"
+        run: cargo build --verbose
